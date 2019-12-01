@@ -16,11 +16,13 @@ import java.io.FileReader;
 public class readByLine {
     
 
-/**
- * Open and read a file, and return the lines in the file as a list
- * of Strings.
- * (Demonstrates Java FileReader, BufferedReader, and Java5.)
- */
+    /**
+     * adapted from
+     * https://alvinalexander.com/blog/post/java/how-open-read-file-java-string-array-list:
+     *
+     * Open and read a file, and return the lines in the file as a list of
+     * Strings.
+     */
     static List<String> readAsString(String filename) {
         List<String> input = new ArrayList<String>();
         filename = System.getProperty("user.home") + "/github/adventofcode-2019/data/"
@@ -39,20 +41,21 @@ public class readByLine {
             return null;
         }
     }
+
+    // most tasks use integers
+    // try to convert each line to int:
     
     static List<Integer> readAsInt(String filename) {
         List<Integer> inputInteger = new ArrayList<Integer>();
         List<String> inputString = readAsString(filename);
-        
-        for (String line : inputString) {
-                    try {
 
+        for (String line : inputString) {
+            try {
                 inputInteger.add(Integer.parseInt(line));
-            } catch(NumberFormatException nfe) {
-               System.out.println("Could not parse " + nfe);
-            } 
-        }       
+            } catch (NumberFormatException nfe) {
+                System.out.println("Could not parse " + nfe);
+            }
+        }
         return inputInteger;
-        
     }
 }

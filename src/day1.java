@@ -33,7 +33,7 @@ public class day1 {
         
         int result2 = 0;
         for (int mass : inputInt) {
-            int fuel = calculateFuel(mass) - mass;
+            int fuel = calculateFuel(mass) - mass; //correct by -mass or pass first fuel calculation manually as parameter
             System.out.println(fuel);
             result2 = result2 + fuel;
         }
