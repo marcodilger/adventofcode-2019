@@ -13,6 +13,8 @@ import java.util.List;
 public class day1 {
     public static void main(String[] args) {
         
+        // part 1
+        
         List<Integer> inputInt = readByLine.readAsInt("day1.txt");
         System.out.println(inputInt);
         
@@ -24,8 +26,30 @@ public class day1 {
             result = result + fuel;
         }
         
-        System.out.print("Result: ");
+        System.out.print("Result part1: ");
         System.out.println(result);
+        
+        // part 2
+        
+        int result2 = 0;
+        for (int mass : inputInt) {
+            int fuel = calculateFuel(mass) - mass;
+            System.out.println(fuel);
+            result2 = result2 + fuel;
+        }
+        
+        System.out.print("Result part2: ");
+        System.out.println(result2);
+        
+        
+        
     }
     
+    private static int calculateFuel(int mass) {
+        if (mass <= 0) {
+            return 0;
+        } else {
+            return mass + calculateFuel((mass / 3) - 2);
+        }
+    }
 }
