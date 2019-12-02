@@ -10,7 +10,7 @@
  */
 public class day2 {
         public static void main(String[] args) {
-            String input = readByLine.readAsString("day2test.txt").get(0);
+            String input = readByLine.readAsString("day2.txt").get(0);
             String[] opsString = input.split(",");
             int[] ops = new int[opsString.length];
             int i = 0;
