@@ -27,24 +27,34 @@ public class day3 {
         
         ArrayList<int[]> locations1 = createLocationList(l1directions);
         ArrayList<int[]> locations2 = createLocationList(l2directions);
+       
         
         ArrayList<int[]> matches = new ArrayList<int[]>();
         
-        int bestDistance = 99999;
+        int shortestPath = 999999999;
+        int pathLength1 = 0;
         
         // find intersections
         for (int[] coords1 : locations1) {
-            int currentDistance = getDistance(coords1);
-            if (currentDistance != 0 & currentDistance < bestDistance){ // probably better to remov all {0,0} from the lists
+        int pathLength2 = 0;
+ 
+            if (pathLength1 != 0 & pathLength1 < shortestPath){ // probably better to remov all {0,0} from the lists
                 for (int[] coords2 : locations2) {
-                    if (coords1[0] == coords2[0] & coords1[1] == coords2[1]) {
-                        bestDistance = currentDistance;
+                    if ((pathLength1 + pathLength2) > shortestPath) {
+                        break;
                     }
+                    if (coords1[0] == coords2[0] & coords1[1] == coords2[1]) {
+                        if ((pathLength1 + pathLength2) < shortestPath) {
+                        shortestPath = (pathLength1 + pathLength2);
+                    }
+                    }
+                    pathLength2++;
                 }
                 
             }
+            pathLength1++;
         }
-        System.out.println("day3 part1 sol: " + bestDistance); // correct
+        System.out.println("day3 part2 sol: " + shortestPath); // correct
         
     }
     
