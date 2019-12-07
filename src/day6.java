@@ -31,6 +31,12 @@ public class day6 {
 
             for (String centers : children) {
                 nextCenters.add(centers.split("\\)")[1]);
+                if (centers.split("\\)")[1].equals("YOU")) {   // to help part2
+                    System.out.println("YOU found orbiting level" + level);
+                }
+                if (centers.split("\\)")[1].equals("SAN")) {   // to help part2
+                    System.out.println("SAN found orbiting level" + level);
+                }
             }
 
             // remove all childrens from orbits
@@ -46,7 +52,33 @@ public class day6 {
             level++;
         }
         System.out.println("result part 1: " + orbitCount);
+        
+        
+        // part 2
+        
+        orbits = readByLine.readAsString("day6.txt");
+         // SAN is 4 levels lower than YOU: 334
+            // YOU is at level 330
+            
+            level = 334;
+            String SANcenter = "SAN";
+            String YOUcenter = "YOU";
+            
+            while (level > 330) { // manual adjustment, after this the cneters can be directly compared
+                SANcenter = getCenter(orbits, SANcenter);
+                level--;
+            }
+            
+            while (!SANcenter.equals(YOUcenter) & level > 0) {
+                SANcenter = getCenter(orbits, SANcenter);
+                YOUcenter = getCenter(orbits, YOUcenter);
+                level--;
+                
+            }
+            System.out.println("day6 part 2: " + (334 - level + 330 - level - 2));
     }
+    
+      
     
         private static List<String> returnChildren(List<String> orbits, String center) {
             
@@ -58,6 +90,15 @@ public class day6 {
             }
         }
             return children;
+        }
+        
+        private static String getCenter(List<String> orbits, String outer){
+            for (String o : orbits) {
+                if (o.split("\\)")[1].equals(outer)) {
+                    return o.split("\\)")[0];
+            }
+        }
+            return "not found"; // should not happen
         }
  
 }
