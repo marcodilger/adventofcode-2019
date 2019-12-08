@@ -1,4 +1,7 @@
 
+import java.util.Arrays;
+
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -31,6 +34,26 @@ public class day8 {
         System.out.println("result day 8 part1: " + (
                 countInLayer(digits, layerWithFewest, 1, width*height)* 
                 countInLayer(digits, layerWithFewest, 2, width*height)) );
+        
+        // part2
+        
+        int[] visible = createVisible(digits, height*width);
+        
+        int pixelInRow = 0;
+        for (int digit : visible) {
+            if (digit == 1) {
+                System.out.print(".");
+            } else {
+                System.out.print(" ");
+            }
+            pixelInRow++;
+            if (pixelInRow >= width) {
+                System.out.println("");
+                pixelInRow = 0;
+            }
+        }
+        
+        
     }
     
     public static int getLayerWithFewest(int[] digits, int fewest, int layerSize) {
@@ -69,6 +92,22 @@ public class day8 {
         }
         
         return count;
+    }
+    
+    public static int[] createVisible(int[] digits, int layerSize) {
+        // layerSize = offset
+        int[] visible = Arrays.copyOfRange(digits, 0, layerSize);
+        int layer = 1;
+        // while end of layers has not been reached
+        while (layer < (digits.length / layerSize)) {
+            for (int pixel = 0; pixel < layerSize; pixel++) {
+                if (visible[pixel] == 2) {
+                    visible[pixel] = digits[(layer * layerSize) + pixel];
+                }
+            }
+            layer++;
+        }
+        return visible;
     }
 }
 
