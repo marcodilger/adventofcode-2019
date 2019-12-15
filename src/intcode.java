@@ -39,7 +39,8 @@ public class intcode {
 
             int opCode;
             boolean breakFound = false;
-            int result = -1;
+            int result = -1; // not ideal
+            
             
             int param1 = 0; // to store the vlaue of parameter 2 depending on parametermode
             int param2 = 0; // to store the value of par 1 ... 
@@ -108,7 +109,9 @@ public class intcode {
                     } else if (opCode == 4) { // output
                         jump = 2;
                         result = param1;
-                        
+                        System.out.println("returning from opcode 4: " + result);
+                        return result; // not ideal should be solved better
+                        // break;
                     } else if (opCode == 5) { // jump if true
                         jump = 3;
                         if (param1 != 0) {
@@ -139,8 +142,9 @@ public class intcode {
                 }
                 lastReturnValue = result;
        
-                
+            System.out.println("returning from end of intcode: " + result);
             return result;
+            
             }
             
             public int getPos() {

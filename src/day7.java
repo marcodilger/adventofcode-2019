@@ -15,8 +15,51 @@ import java.util.Arrays;
  */
 public class day7 {
         public static void main(String[] args) {
-            day7 day7 = new day7();
-            day7.part2();
+            
+            String input = readByLine.readAsString("day7test.txt").get(0);
+            String[] opsString = input.split(",");
+            int[] ops = new int[opsString.length];
+            int i = 0;
+            for (String s : opsString) {
+                ops[i] = Integer.parseInt(s);
+                i++;
+            }
+            
+            // rewrite part 1 using intcode class
+            
+            List<Integer> fullSettings = new ArrayList<>();
+            fullSettings.addAll(Arrays.asList(1, 2, 3, 4, 5));
+            //create settings
+            List<Integer[]> settingsList = createSettingsList(fullSettings);
+            
+            // for (int[] s : settingList) ....
+            // for testing purposes only 1 setting
+            // 4,3,2,1,0
+            int[] s = new int[]{4,3,2,1,0};
+            
+            intcode ampA = new intcode(ops, s[0]);
+            intcode ampB = new intcode(ops, s[1]);
+            intcode ampC = new intcode(ops, s[2]);
+            intcode ampD = new intcode(ops, s[3]);
+            intcode ampE = new intcode(ops, s[4]);
+            
+            // initialise all
+            ampA.runCode(0);
+            ampA.printIntcode();
+            ampB.runCode(0); //why -1? ToDo
+            ampB.printIntcode(); 
+            ampC.runCode(0);
+            ampD.runCode(0);
+            ampE.runCode(0);
+            
+            // run chained
+            //int result = ampE.runCode(ampD.runCode(ampC.runCode(ampB.runCode(ampA.runCode(0)))));
+            
+            //System.out.println("day 7 part 1: " + result);
+            
+            // old stuff
+            //day7 day7 = new day7();
+            //day7.part2();
             
             }
         
