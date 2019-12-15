@@ -15,18 +15,91 @@ public class day14 {
 
     public static void main(String[] args) {
         day14 day14 = new day14();
-        day14.part1();
+        //day14.part1();
+        day14.part2();
+        
+        // stopped at 1/10 the max ore: 133006
+        // 1330067 was too high
     }
 
     List<String> input;
 
     public day14() { // constructor
-        input = readByLine.readAsString("day14test.txt");
+        input = readByLine.readAsString("day14.txt");
     }
     
  
 
     public void part1() {
+        
+
+        List<reaction> knownReactions = new ArrayList<>();
+        String master = "";
+        
+        // read in reactions from input
+        
+        //System.out.println("reading lines");
+        for (String line : input) {
+            System.out.println(line);
+            if (line.endsWith("FUEL")) {
+                master = line;
+            } else {
+                knownReactions.add(new reaction(line));
+            }
+        }
+        //System.out.println("end of reading lines");
+        
+        // create the reaction that generates FUEL
+        
+        reaction masterReaction = new reaction(master);
+        
+        System.out.println("known reactions:");
+        for (reaction r : knownReactions) {
+            r.printReaction();
+        }
+        System.out.println("end of known reactions");
+
+        System.out.print("master reaction: ");
+        masterReaction.printReaction();
+
+        // while resolvableEductsFound = true do:
+        boolean resolvableEductsFound = true;
+        while (resolvableEductsFound) {
+            
+            // todo: prioritize reaction to merge which have common educts
+            
+            // detect which educts are not OREs
+            resolvableEductsFound = false;
+            for (int i = 0; i < masterReaction.eductNames.size(); i++) {
+                String currentEduct = masterReaction.eductNames.get(i);
+                int currentEductQuant = masterReaction.eductQuantities.get(i);
+
+                if (!currentEduct.equals("ORE") & currentEductQuant > 0) { // educt at pos i is not an element
+                    resolvableEductsFound = true;
+                    //System.out.println("currently checked educt : " + currentEduct + " is not an elementary educt (ORE)");
+                    // check if educt is a product in any of the known reactions
+                    for (reaction r : knownReactions) {
+                        //System.out.print("checking: ");
+                        //r.printReaction();
+                        if (r.productNames.get(0).equals(currentEduct)) {
+                            // replace educt
+                            masterReaction.replaceEducts(r);
+                            //masterReaction.printReaction();
+                            break;
+
+                        }
+                    }
+                    break;
+                }
+            }
+        } // end of while (resolvableEductsFound)
+        
+        System.out.println("result: ");
+        masterReaction.printReaction();
+ 
+    }
+    
+    public void part2() {
         
 
         List<reaction> knownReactions = new ArrayList<>();
@@ -42,129 +115,46 @@ public class day14 {
                 knownReactions.add(new reaction(line));
             }
         }
+        System.out.println("end of reading in lines");
         
-        // find the reaction that generates FUEL
+        reaction lastReaction = new reaction(); // to store the leftovers of the last reaction
         
+        long oreLimit =   1000000000000L;
+        long oreCount = 0;
+        long fuelCount = 0;
+        
+        while (oreCount <= oreLimit) {
+        
+        // create the reaction that generates FUEL
         reaction masterReaction = new reaction(master);
-        /*        
-        
-9 ORE => 2 A
-8 ORE => 3 B
-7 ORE => 5 C
-3 A, 4 B => 1 AB
-5 B, 7 C => 1 BC
-4 C, 1 A => 1 CA
-2 AB, 3 BC, 4 CA => 1 FUEL
-        
-  
-*/
-        
-        // sequentially buidl parser, should then implemented in constructor of reaction
-//        String reactionInput = "5 B, 7 C => 1 BC";
-//        String eductString = reactionInput.split(" => ")[0];
-//
-//        
-//        String[] educts = eductString.split(", ");
-//        for (String s : educts) {
-//            int eductQuant = Integer.parseInt(s.split(" ")[0]);
-//            String educt = s.split(" ")[1];
-//            System.out.println("educt parsed: " + eductQuant + " " + educt);
-//        }
-//        
-//        String productString = reactionInput.split(" => ")[1];
-//        int productQuant = Integer.parseInt(productString.split(" ")[0]);
-//        String product = productString.split(" ")[1];
-//        System.out.println("product parsed: " + productQuant + " " + product);
-        
-
-//        reaction r1 = new reaction("9 ORE => 2 A");
-//        knownReactions.add(r1);
-//        
-// //       reaction r2 = new reaction();
-//        knownReactions.add(new reaction("8 ORE => 3 B"));
-////        r2.addEduct("ORE", 8);
-////        r2.addProduct("B", 3);
-//        
-//        reaction r3 = new reaction();
-//        knownReactions.add(r3);
-//        r3.addEduct("ORE", 7);
-//        r3.addProduct("C", 5);
-//        
-//        reaction r4 = new reaction();
-//        knownReactions.add(r4);
-//        r4.addEduct("A", 3);
-//        r4.addEduct("B", 4);
-//        r4.addProduct("AB", 1);
-//        
-//        reaction r5 = new reaction();
-//        knownReactions.add(r5);
-//        r5.addEduct("C", 7);
-//        r5.addEduct("B", 5);
-//        r5.addProduct("BC", 1);
-//        
-//        reaction r6 = new reaction("4 C, 1 A => 1 CA");
-//        knownReactions.add(r6);
-
-        
-    
-        
-        
-//        reaction masterReaction = new reaction();
-//
-//        masterReaction.addEduct("AB", 2);
-//        masterReaction.addEduct("BC", 3);
-//        masterReaction.addEduct("CA", 4);
-//        masterReaction.addProduct("FUEL", 1);
-
-        masterReaction.printReaction();
-
-//        reaction supportReaction = new reaction();
-//        knownReactions.add(supportReaction);
-//        supportReaction.addEduct("A", 7);
-//        supportReaction.addEduct("A", 7);
-//        supportReaction.addEduct("C", 1);
-//        supportReaction.addProduct("CA", 2);
-//        supportReaction.printReaction();
-//
-//        reaction supportReaction2 = new reaction();
-//        knownReactions.add(supportReaction2);
-//        supportReaction2.addEduct("ORE", 113);
-//        supportReaction2.addProduct("C", 1);
-//
-//        reaction supportReaction3 = new reaction();
-//        knownReactions.add(supportReaction3);
-//        supportReaction3.addEduct("ORE", 23);
-//        supportReaction3.addProduct("A", 2);
-//        
-
-
-        System.out.println("known reactions:");
-        for (reaction r : knownReactions) {
-            r.printReaction();
+        // correct this by the educts in lsatReaction
+        for (int i = 0; i < lastReaction.eductNames.size(); i++) {
+            masterReaction.addEduct(lastReaction.eductNames.get(i), lastReaction.eductQuantities.get(i));
         }
-        System.out.println("end of known reactions");
+        
 
-        masterReaction.printReaction();
-
-        // while resolvableEductsFound = true do:
         boolean resolvableEductsFound = true;
         while (resolvableEductsFound) {
+            
+            // todo: prioritize reaction to merge which have common educts
+            
             // detect which educts are not OREs
             resolvableEductsFound = false;
             for (int i = 0; i < masterReaction.eductNames.size(); i++) {
                 String currentEduct = masterReaction.eductNames.get(i);
+                int currentEductQuant = masterReaction.eductQuantities.get(i);
 
-                if (!currentEduct.equals("ORE")) { // educt at pos i is not an element
+                if (!currentEduct.equals("ORE") & currentEductQuant > 0) { // educt at pos i is not an element
                     resolvableEductsFound = true;
-                    System.out.println("currently checked educt : " + currentEduct + " is not an elementary educt (ORE)");
+                    //System.out.println("currently checked educt : " + currentEduct + " is not an elementary educt (ORE)");
                     // check if educt is a product in any of the known reactions
                     for (reaction r : knownReactions) {
-                        System.out.print("checking: ");
-                        r.printReaction();
+                        //System.out.print("checking: ");
+                        //r.printReaction();
                         if (r.productNames.get(0).equals(currentEduct)) {
                             // replace educt
                             masterReaction.replaceEducts(r);
-                            masterReaction.printReaction();
+                            //masterReaction.printReaction();
                             break;
 
                         }
@@ -174,16 +164,33 @@ public class day14 {
             }
         } // end of while (resolvableEductsFound)
         
-        System.out.println("result: ");
-        masterReaction.printReaction();
-
-        //masterReaction.replaceEducts(supportReaction2);
-        //masterReaction.printReaction();
+        // handle masterReaction, i.e.
+            // delete ORE , add it to oreCount
+            // put rest to lastMasterReaction
+        //oreCount = oreCount + masterReaction.getEductQuant("ORE");
+        int currentOre = 0;
+        for (int i = 0; i < masterReaction.eductNames.size(); i++) {
+            if (masterReaction.eductNames.get(i).equals("ORE")) {
+                currentOre = masterReaction.eductQuantities.get(i);
+            }
+        }
+        //oreCount = oreCount + masterReaction.getEductQuant("ORE");
+        oreCount = oreCount + currentOre;
+        masterReaction.deleteEduct("ORE");
+           
+        lastReaction = new reaction();
+        for (int i = 0; i < masterReaction.eductNames.size(); i++) {
+            lastReaction.addEduct(masterReaction.eductNames.get(i), masterReaction.eductQuantities.get(i));
+        }
         
- 
+        // increase fuel count
+        fuelCount++;        
+        //System.out.println("ore count after this round " + oreCount);
+        }
+        System.out.println("solution day14 part 2: " + (fuelCount-1));
+            
+        
     }
-    
-       
 
     public class reaction {
 
@@ -208,26 +215,44 @@ public class day14 {
         for (String s : educts) {
             int eductQuant = Integer.parseInt(s.split(" ")[0]);
             String educt = s.split(" ")[1];
-            System.out.println("educt parsed: " + eductQuant + " " + educt);
+            //System.out.println("educt parsed: " + eductQuant + " " + educt);
             this.addEduct(educt, eductQuant);
         }
         
         String productString = reactionInput.split(" => ")[1];
         int productQuant = Integer.parseInt(productString.split(" ")[0]);
         String product = productString.split(" ")[1];
-        System.out.println("product parsed: " + productQuant + " " + product);
+        //System.out.println("product parsed: " + productQuant + " " + product);
         this.addProduct(product, productQuant);
         }
         
+        public void deleteEduct(String toDelete) {
+            for (int i = 0; i < this.eductNames.size(); i++) {
+                if (this.eductNames.get(i).equals(toDelete)) {
+                    this.eductNames.remove(i);
+                    this.eductQuantities.remove(i);
+                    break;
+                }
+            }
+        }
         
-        
-        
-        
+//        public int getEductQuant(String educt){ // problem, not used for now
+//            for (int i = 0; i < this.eductNames.size(); i++) {
+//                if (this.eductNames.get(i).equals(educt)) {
+//                    return this.eductQuantities.get(i);
+//                } else {
+//                    return -1;
+//                }
+//        }
         
         
         
 
         public void replaceEducts(reaction source) {
+            
+            // todo: needs to handle leftovers
+            // idea: add leftovers as negative educts, should then cancel out
+            
             // double check so that product of source reaction really is an educt of this reaction
 
             int eductPos = 999;
@@ -236,18 +261,19 @@ public class day14 {
                 if (eductNames.get(i).equals(source.productNames.get(0))) {
                     eductPos = i;
                     eductQuantity = eductQuantities.get(i);
+                    //System.out.println("replacing " + eductNames.get(i));
                     break;
                 }
             }
             if (eductPos == 999) {
-                System.out.println("Product of source reaction is not an educt of active reaction");
+                //System.out.println("Product of source reaction is not an educt of active reaction");
             } else { // product - educt pair was found
                 // remove educt
                 eductNames.remove(eductPos);
                 eductQuantities.remove(eductPos);
 
                 // find out how often the source reaction has to be applied to satisfy eductQuantities
-                int sourceMultiplier = eductQuantity;
+                int sourceMultiplier = eductQuantity; // maximum possible times the source reaction has to be called
                 while ((sourceMultiplier - 1) * source.productQuantities.get(0) >= eductQuantity) {
                     sourceMultiplier--;
                 }
@@ -255,6 +281,13 @@ public class day14 {
                 // add educts from source reaction
                 for (int i = 0; i < source.eductNames.size(); i++) {
                     addEduct(source.eductNames.get(i), (source.eductQuantities.get(i) * sourceMultiplier));
+                }
+                
+                // leftovers?
+                int eductDiff = eductQuantity - (sourceMultiplier * source.productQuantities.get(0));
+                if (eductDiff != 0) {
+                    //System.out.println("leftovers: " + eductDiff + " " + source.productNames.get(0));
+                    addEduct(source.productNames.get(0), eductDiff); // add the leftovers (a negative number) to master Reaction                    
                 }
             } // end of handling product/educt pair
         }
@@ -268,6 +301,7 @@ public class day14 {
                     return;
                 }
             }
+            
 
             eductNames.add(name);
             eductQuantities.add(quant);
