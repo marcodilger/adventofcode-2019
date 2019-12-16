@@ -17,9 +17,6 @@ public class day14 {
         day14 day14 = new day14();
         //day14.part1();
         day14.part2();
-        
-        // stopped at 1/10 the max ore: 133006
-        // 1330067 was too high
     }
 
     List<String> input;
