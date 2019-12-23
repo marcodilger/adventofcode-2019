@@ -83,11 +83,8 @@ public class day12 {
 
     public void part2() {
         ArrayList<planet> planets = new ArrayList<>();
-        HashSet stateX = new HashSet();
-        HashSet stateY = new HashSet();
-        HashSet stateZ = new HashSet();
-        long steps = 1;
-        long limit = 19999999999999L; // to update
+        int steps = 1;
+        int limit = 9999999; // to update
         boolean found = false;
 
         planets.add(new planet(-3, 15, -11));
@@ -95,11 +92,15 @@ public class day12 {
         planets.add(new planet(-13, 18, -2));
         planets.add(new planet(6, 0, -1));
 //    
-// testinput
+ //testinput
 //        planets.add(new planet(-1, 0, 2));
 //        planets.add(new planet(2, -10, -7));
 //        planets.add(new planet(4, -8, 8));
 //        planets.add(new planet(3, 5, -1));
+        
+        int periodX = 9999999;
+        int periodY = 9999999;
+        int periodZ = 9999999;
 
         while (!found & steps <= limit) {
 
@@ -116,27 +117,58 @@ public class day12 {
             for (planet p : planets) {
                 p.applyVelocity();
             }
-
-            //System.out.println("steps: " + steps);
             
-
-            planetaryState status = new planetaryState(planets.get(0), planets.get(1), planets.get(2), planets.get(3));
+            // check initial state for each axis
             
-            //System.out.println("" + status.hashCode());
-
-            // add hashed planetary states
-//            if (stateHash.contains(status.hashCode())) {
-//                
-//                found = true;
-//                System.out.println("identical state found after: " + (steps -1));  // this does not work
-//            } else {
-//                stateHash.add(status.hashCode());
-//            }
+            boolean periodXfound = true;
+            boolean periodYfound = true;
+            boolean periodZfound = true;
             
+            
+            if (periodX > 999999) {
+            for (planet p : planets) {
+                if (!p.isInitial(0)) {
+                    periodXfound = false;
+                    break;
+                    }
+            }
+            } else periodXfound = false;
+            
+            if (periodY > 999999) {
+            for (planet p : planets) {
+                if (!p.isInitial(1)) {
+                    periodYfound = false;
+                    break;
+                    }
+            }
+            } else periodYfound = false;
+            
+            if (periodZ > 999999) {
+            for (planet p : planets) {
+                if (!p.isInitial(2)) {
+                    periodZfound = false;
+                    break;
+                    }
+                }
+            } else periodZfound = false;
+            
+            if (periodXfound) {
+                periodX = steps;
+                System.out.println("periodicity for x at steps: " + steps);
+            }
+            if (periodYfound) {
+                periodY = steps;
+                System.out.println("periodicity for Y at steps: " + steps);
+            }
+            if (periodZfound) {
+                periodZ = steps;
+                System.out.println("periodicity for z at steps: " + steps);
+            }
+            
+            if (periodXfound & periodYfound & periodZfound) found = true; // stop while loop
             steps++;
-
         }
-
+        System.out.println("result day12 part2: " + lcm(lcm(periodX, periodY), periodZ));
     }
 
     public static void applyGravity(planet planet1, planet planet2) {
@@ -155,48 +187,24 @@ public class day12 {
             }
         }
     }
-
-    class planetaryState {
-
-        int[][] planetState;
-
-        public planetaryState(planet p0, planet p1, planet p2, planet p3) {
-
-            planetState = new int[4][6];
-            
-            planetState[0] = p0.getState();
-            planetState[1] = p1.getState();
-            planetState[2] = p2.getState();
-            planetState[3] = p3.getState();
-
-        }
-
-        @Override
-        public int hashCode() {
-            int hash = 7;
-            hash = 83 * hash + Arrays.deepHashCode(this.planetState);
-            return hash;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (obj == null) {
-                return false;
-            }
-            if (getClass() != obj.getClass()) {
-                return false;
-            }
-            final planetaryState other = (planetaryState) obj;
-            if (!Arrays.deepEquals(this.planetState, other.planetState)) {
-                return false;
-            }
-            return true;
-        }
-
+    
+    // copy paste lcm function from https://www.baeldung.com/java-least-common-multiple
+    
+    public static long lcm(long number1, long number2) {
+    if (number1 == 0 || number2 == 0) {
+        return 0;
     }
+    long absNumber1 = Math.abs(number1);
+    long absNumber2 = Math.abs(number2);
+    long absHigherNumber = Math.max(absNumber1, absNumber2);
+    long absLowerNumber = Math.min(absNumber1, absNumber2);
+    long lcm = absHigherNumber;
+    while (lcm % absLowerNumber != 0) {
+        lcm += absHigherNumber;
+    }
+    return lcm;
+}
+
 
     class planet {
 
@@ -258,9 +266,6 @@ public class day12 {
             return new int[]{x_vel, y_vel, z_vel};
         }
 
-        public int[] getState() {
-            return new int[]{x_pos, y_pos, z_pos, x_vel, y_vel, z_vel};
-        }
 
         public void changeVels(int pos, int change) {
             if (pos == 0) {
