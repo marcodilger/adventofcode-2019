@@ -1,0 +1,63 @@
+case offset = 1, repetition = row + offset + 1
+
+
+
+row 0: 1  1  0  0 -1 -1  0  0  1  1  0  0 -1 -1  0  0  1  1  0  0 -1 -1  0  0  1  1  0 
+row 1: 0  1  1  1  0  0  0 -1 -1 -1  0  0  0  1  1  1  0  0  0 -1 -1 -1  0  0  0  1  1
+row 2: 0  0  1  1  1  1  0  0  0  0 -1 -1 -1 -1  0  0  0  0  1  1  1  1  0  0  0  0 -1
+
+patternLength 4: 1 2 3 4
+
+row0: repetition 2; extraoffset = 0
+
+ 1: 1 2  1 2  1 2
+ 0: 3 4  3 4  3 4
+-1: 1 2  1 2  1 2     repetition after repetition*patternLength
+ 0: 3 4  3 4  3 4
+
+
+
+ repetition 3, extraoffset = 1
+
+  1:     2 3 4   2 3 4  
+  0:     1 2 3   1 2 3
+ -1:     4 1 2   4 1 2
+  0: 1   3 4 1   3 4 1   repetition after repetition*patternLength
+
+  rep 4, extraoffset = 2
+
+  1:       3 4 1 2
+  0:       3 4 1 2
+ -1:       3 4 1 2          every row, where repetition is multiple of patternLength -> 0
+  0: 1 2   3 4 1 2
+
+
+
+
+=============== in case patternLength = 5: 1 2 3 4 5
+repetition 2, extraOffset = 0
+
+ 1:   1 2    4 5  2 3   5 1  3 4
+ 0:   3 4    1 2  4 5   2 3  5 1
+-1:   5 1    3 4  1 2   4 5  2 3
+ 0: - 2 3    5 1  3 4   1 2  4 5            
+
+ repetition*basePatternlength = 8; lcm (patternlength, repetition*basePatternlength)= 40. 
+
+ repetition 3, extraOffset = 1 -> probably repetition after lcm(5, 3*4) = 60  (+1)
+
+ 1:    2 3 4   4 5 1  1 2 3  3 4 5  5 1 2      2 3 4   
+ 0:    5 1 2   2 3 4  4 5 1  1 2 3  3 4 5  REP:5 1 2
+-1:    3 4 5   5 1 2  2 3 4  4 5 1  1 2 3      3 4 5
+ 0: 1  1 2 3   3 4 5  5 1 2  2 3 4  4 5 1      1 2 3
+
+
+
+
+
+
+ example offset = 2
+
+
+row 0: 1  1  1  0  0  0 -1 -1 -1  0  0  0  1  1  1  0  0  0 -1 -1 -1  0  0  0  1  1
+row 1: 0  1  1  1  1  0  0  0  0 -1 -1 -1 -1  0  0  0  0  1  1  1  1  0  0  0  0 -1
